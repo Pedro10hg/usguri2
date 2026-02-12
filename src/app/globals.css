@@ -3,18 +3,31 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Brand colors (blue-ish accent) */
-  --color-brand-50: oklch(0.97 0.01 250);
-  --color-brand-100: oklch(0.93 0.03 250);
-  --color-brand-200: oklch(0.86 0.06 250);
-  --color-brand-300: oklch(0.76 0.1 250);
-  --color-brand-400: oklch(0.66 0.15 250);
-  --color-brand-500: oklch(0.55 0.2 250);
-  --color-brand-600: oklch(0.47 0.2 250);
-  --color-brand-700: oklch(0.39 0.17 250);
-  --color-brand-800: oklch(0.33 0.14 250);
-  --color-brand-900: oklch(0.27 0.1 250);
-  --color-brand-950: oklch(0.2 0.07 250);
+  /* Verde — cor primaria (#60C659) */
+  --color-guri-green-50: oklch(0.97 0.03 145);
+  --color-guri-green-100: oklch(0.93 0.06 145);
+  --color-guri-green-200: oklch(0.87 0.11 145);
+  --color-guri-green-300: oklch(0.80 0.15 145);
+  --color-guri-green-400: oklch(0.76 0.17 145);
+  --color-guri-green-500: oklch(0.72 0.19 145);
+  --color-guri-green-600: oklch(0.62 0.18 145);
+  --color-guri-green-700: oklch(0.52 0.15 145);
+  --color-guri-green-800: oklch(0.42 0.12 145);
+  --color-guri-green-900: oklch(0.32 0.09 145);
+  --color-guri-green-950: oklch(0.22 0.06 145);
+
+  /* Azul — cor secundaria (#3A75C4) */
+  --color-guri-blue-50: oklch(0.97 0.02 255);
+  --color-guri-blue-100: oklch(0.93 0.04 255);
+  --color-guri-blue-200: oklch(0.86 0.08 255);
+  --color-guri-blue-300: oklch(0.76 0.12 255);
+  --color-guri-blue-400: oklch(0.65 0.14 255);
+  --color-guri-blue-500: oklch(0.53 0.15 255);
+  --color-guri-blue-600: oklch(0.47 0.15 255);
+  --color-guri-blue-700: oklch(0.40 0.13 255);
+  --color-guri-blue-800: oklch(0.33 0.11 255);
+  --color-guri-blue-900: oklch(0.27 0.08 255);
+  --color-guri-blue-950: oklch(0.20 0.05 255);
 
   /* Font families (Geist loaded via next/font) */
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
