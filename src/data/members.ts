@@ -37,7 +37,7 @@ export const members: Member[] = [
   },
   {
     id: '4',
-    name: 'Kaio Maconheiro,
+    name: 'Kaio Maconheiro',
     role: 'Criou essa merda',
     bio: 'Fodase.',
     avatarUrl: 'https://ui-avatars.com/api/?name=Kaio+Oliveira&background=f59e0b&color=fff&size=160',
