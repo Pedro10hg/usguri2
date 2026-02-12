@@ -38,7 +38,7 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="mt-10 flex flex-wrap items-center justify-center gap-4"
         >
-          <Button href="/membros">
+          <Button href="/sobre">
             Conheça o time <ArrowRight className="h-4 w-4" />
           </Button>
           <Button href="/projetos" variant="secondary">
