@@ -23,9 +23,9 @@ export function Navbar() {
       <Container>
         <nav className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-            <Code2 className="h-6 w-6 text-brand-500" />
+            <Code2 className="h-6 w-6 text-guri-green-500" />
             <span>
-              Site dos <span className="text-brand-500">Guri</span>
+              Site dos <span className="text-guri-green-500">Guri</span>
             </span>
           </Link>
 
@@ -36,7 +36,7 @@ export function Navbar() {
                 href={link.href}
                 className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   pathname === link.href
-                    ? 'bg-brand-50 text-brand-600 dark:bg-brand-950 dark:text-brand-400'
+                    ? 'bg-guri-green-50 text-guri-green-600 dark:bg-guri-green-950 dark:text-guri-green-400'
                     : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
                 }`}
               >
@@ -78,7 +78,7 @@ export function Navbar() {
                     onClick={() => setMobileOpen(false)}
                     className={`rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                       pathname === link.href
-                        ? 'bg-brand-50 text-brand-600 dark:bg-brand-950 dark:text-brand-400'
+                        ? 'bg-guri-green-50 text-guri-green-600 dark:bg-guri-green-950 dark:text-guri-green-400'
                         : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
                     }`}
                   >
