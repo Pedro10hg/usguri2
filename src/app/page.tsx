@@ -1,25 +1,56 @@
-'use client' // Necessário para usar animações do Framer Motion
+import { Hero } from '@/components/Hero'
+import { Container } from '@/components/ui/Container'
+import { SectionHeading } from '@/components/ui/SectionHeading'
+import { AnimatedCard } from '@/components/ui/AnimatedCard'
+import { Card } from '@/components/ui/Card'
+import { Code2, Users, Lightbulb } from 'lucide-react'
 
-import { motion } from 'framer-motion'
-import { Rocket } from 'lucide-react'
+const features = [
+  {
+    icon: Code2,
+    title: 'Código Limpo',
+    description:
+      'Praticamos as melhores práticas de desenvolvimento e revisão de código.',
+  },
+  {
+    icon: Users,
+    title: 'Comunidade',
+    description:
+      'Colaboração e troca de conhecimento entre os membros do grupo.',
+  },
+  {
+    icon: Lightbulb,
+    title: 'Inovação',
+    description:
+      'Projetos com tecnologias modernas e abordagens criativas.',
+  },
+]
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-slate-950 text-white">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="text-center"
-      >
-        <Rocket className="mx-auto mb-4 h-16 w-16 text-blue-500" />
-        <h1 className="text-5xl font-bold tracking-tight">
-          Site dos <span className="text-blue-500">Guri</span>
-        </h1>
-        <p className="mt-4 text-slate-400">
-          A nova era começou. Código limpo e ferramentas de ponta.
-        </p>
-      </motion.div>
-    </main>
+    <>
+      <Hero />
+      <section className="py-20">
+        <Container>
+          <SectionHeading
+            title="O que nos move"
+            subtitle="Somos um grupo dedicado a construir, aprender e evoluir juntos."
+          />
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature, i) => (
+              <AnimatedCard key={feature.title} index={i}>
+                <Card>
+                  <feature.icon className="mb-4 h-10 w-10 text-brand-500" />
+                  <h3 className="text-lg font-semibold">{feature.title}</h3>
+                  <p className="mt-2 text-slate-600 dark:text-slate-400">
+                    {feature.description}
+                  </p>
+                </Card>
+              </AnimatedCard>
+            ))}
+          </div>
+        </Container>
+      </section>
+    </>
   )
 }
