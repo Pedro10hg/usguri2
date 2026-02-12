@@ -11,7 +11,7 @@ export function Footer() {
             <span>&copy; {new Date().getFullYear()} Site dos Guri</span>
           </div>
           <p className="text-sm text-slate-500 dark:text-slate-500">
-            Feito com dedicação pela comunidade.
+            Feito com dedicação pelo Johnson.
           </p>
         </div>
       </Container>
