@@ -4,7 +4,7 @@ import { getStorageUrl } from '@/lib/supabase'
 export const members: Member[] = [
   {
     id: '1',
-    name: 'Pedro Gonçalves',
+    name: 'Johnson',
     role: 'Administrador',
     bio: 'Rei do beat pegou a visão?',
     avatarUrl: getStorageUrl('avatars', 'pedro.jpg'),
@@ -15,7 +15,7 @@ export const members: Member[] = [
   },
   {
     id: '2',
-    name: 'Gabriel Johann',
+    name: 'GHJ',
     role: 'Administrador',
     bio: 'Fodase essa descrição.',
     avatarUrl: getStorageUrl('avatars', 'gabriel.jpg'),
@@ -26,7 +26,7 @@ export const members: Member[] = [
   },
   {
     id: '3',
-    name: 'Thalis de Gregori',
+    name: 'THG',
     role: 'Administrador',
     bio: 'Fodase essa descrição.',
     avatarUrl: getStorageUrl('avatars', 'thalis.jpg'),
