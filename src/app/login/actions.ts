@@ -18,8 +18,9 @@ export async function login(formData: FormData) {
     redirect('/login?error=credentials')
   }
 
+  const next = (formData.get('next') as string) || '/'
   revalidatePath('/', 'layout')
-  redirect('/')
+  redirect(next)
 }
 
 export async function signup(formData: FormData) {

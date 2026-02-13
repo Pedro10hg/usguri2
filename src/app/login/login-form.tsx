@@ -17,6 +17,7 @@ export function LoginForm() {
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
   const success = searchParams.get('success')
+  const next = searchParams.get('next') || '/'
   const [isSignUp, setIsSignUp] = useState(false)
 
   return (
@@ -53,6 +54,7 @@ export function LoginForm() {
           )}
 
           <form className="space-y-4 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <input type="hidden" name="next" value={next} />
             <div>
               <label
                 htmlFor="email"

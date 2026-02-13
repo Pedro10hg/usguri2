@@ -1,12 +1,13 @@
 import { Github, Linkedin, Globe } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
+import { resolveStorageUrl } from '@/lib/queries'
 import type { Member } from '@/types'
 
 export function MemberCard({ member }: { member: Member }) {
   return (
     <Card className="text-center">
       <img
-        src={member.avatarUrl}
+        src={resolveStorageUrl(member.avatar_url)}
         alt={member.name}
         width={80}
         height={80}
@@ -18,33 +19,18 @@ export function MemberCard({ member }: { member: Member }) {
         {member.bio}
       </p>
       <div className="mt-4 flex justify-center gap-3">
-        {member.socialLinks.github && (
-          <a
-            href={member.socialLinks.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-slate-400 transition-colors hover:text-guri-blue-500"
-          >
+        {member.github_url && (
+          <a href={member.github_url} target="_blank" rel="noopener noreferrer" className="text-slate-400 transition-colors hover:text-guri-blue-500">
             <Github className="h-5 w-5" />
           </a>
         )}
-        {member.socialLinks.linkedin && (
-          <a
-            href={member.socialLinks.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-slate-400 transition-colors hover:text-guri-blue-500"
-          >
+        {member.linkedin_url && (
+          <a href={member.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-slate-400 transition-colors hover:text-guri-blue-500">
             <Linkedin className="h-5 w-5" />
           </a>
         )}
-        {member.socialLinks.website && (
-          <a
-            href={member.socialLinks.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-slate-400 transition-colors hover:text-guri-blue-500"
-          >
+        {member.website_url && (
+          <a href={member.website_url} target="_blank" rel="noopener noreferrer" className="text-slate-400 transition-colors hover:text-guri-blue-500">
             <Globe className="h-5 w-5" />
           </a>
         )}

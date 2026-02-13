@@ -1,6 +1,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+const protectedPaths = ['/perfil']
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -30,7 +32,19 @@ export async function updateSession(request: NextRequest) {
       },
     )
 
-    await supabase.auth.getUser()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    const isProtected = protectedPaths.some((p) =>
+      request.nextUrl.pathname.startsWith(p),
+    )
+
+    if (isProtected && !user) {
+      const loginUrl = new URL('/login', request.url)
+      loginUrl.searchParams.set('next', request.nextUrl.pathname)
+      return NextResponse.redirect(loginUrl)
+    }
   } catch {
     // If Supabase is unreachable, let the request through
   }
