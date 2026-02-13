@@ -5,6 +5,7 @@ import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Card } from '@/components/ui/Card'
 import { AnimatedCard } from '@/components/ui/AnimatedCard'
 import { Button } from '@/components/ui/Button'
+import { getStorageUrl } from '@/lib/supabase'
 
 export const metadata: Metadata = {
   title: 'Serviços',
@@ -25,8 +26,13 @@ export default function ServicosPage() {
         <AnimatedCard>
           <Card className="mx-auto max-w-3xl">
             <div className="grid gap-8 md:grid-cols-2">
-              <div className="flex items-center justify-center rounded-xl bg-gradient-to-br from-guri-green-50 to-guri-blue-50 p-12 dark:from-guri-green-950 dark:to-guri-blue-950">
-                <Shirt className="h-32 w-32 text-guri-green-500" />
+              <div className="flex items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-guri-green-50 to-guri-blue-50 dark:from-guri-green-950 dark:to-guri-blue-950">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={getStorageUrl('images', 'camiseta.jpg')}
+                  alt="Camiseta dos Guri"
+                  className="h-full w-full object-cover"
+                />
               </div>
 
               <div className="flex flex-col justify-center">

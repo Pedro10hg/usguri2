@@ -1,4 +1,5 @@
 import type { Member } from '@/types'
+import { getStorageUrl } from '@/lib/supabase'
 
 export const members: Member[] = [
   {
@@ -6,7 +7,7 @@ export const members: Member[] = [
     name: 'Pedro Gonçalves',
     role: 'Administrador',
     bio: 'Rei do beat pegou a visão?',
-    avatarUrl: 'https://ui-avatars.com/api/?name=Pedro+Gonçalves&background=3b82f6&color=fff&size=160',
+    avatarUrl: getStorageUrl('avatars', 'pedro.jpg'),
     socialLinks: {
       github: 'https://github.com',
       linkedin: 'https://linkedin.com',
@@ -17,7 +18,7 @@ export const members: Member[] = [
     name: 'Gabriel Johann',
     role: 'Administrador',
     bio: 'Fodase essa descrição.',
-    avatarUrl: 'https://ui-avatars.com/api/?name=Gabriel+Johann&background=8b5cf6&color=fff&size=160',
+    avatarUrl: getStorageUrl('avatars', 'gabriel.jpg'),
     socialLinks: {
       github: 'https://github.com',
       twitter: 'https://twitter.com',
@@ -28,7 +29,7 @@ export const members: Member[] = [
     name: 'Thalis de Gregori',
     role: 'Administrador',
     bio: 'Fodase essa descrição.',
-    avatarUrl: 'https://ui-avatars.com/api/?name=Thalis+Gregori&background=06b6d4&color=fff&size=160',
+    avatarUrl: getStorageUrl('avatars', 'thalis.jpg'),
     socialLinks: {
       github: 'https://github.com',
       linkedin: 'https://linkedin.com',
@@ -40,7 +41,7 @@ export const members: Member[] = [
     name: 'Kaio Maconheiro',
     role: 'Criou essa merda',
     bio: 'Fodase.',
-    avatarUrl: 'https://ui-avatars.com/api/?name=Kaio+Oliveira&background=f59e0b&color=fff&size=160',
+    avatarUrl: getStorageUrl('avatars', 'kaio.jpg'),
     socialLinks: {
       github: 'https://github.com',
     },
