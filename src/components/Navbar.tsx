@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Code2, Gamepad2 } from 'lucide-react'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { UserMenu } from '@/components/UserMenu'
 import { Container } from '@/components/ui/Container'
 
 const navLinks = [
@@ -65,6 +66,7 @@ export function Navbar() {
             </Link>
 
             <ThemeToggle />
+            <UserMenu />
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
@@ -120,6 +122,10 @@ export function Navbar() {
                     EM BREVE
                   </span>
                 </Link>
+
+                <div className="mt-2 px-4">
+                  <UserMenu />
+                </div>
               </div>
             </motion.div>
           )}
