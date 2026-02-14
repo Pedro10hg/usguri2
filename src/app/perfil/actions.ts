@@ -27,8 +27,7 @@ export async function updateProfile(formData: FormData) {
 
   const { error } = await supabase
     .from('profiles')
-    .update(updates)
-    .eq('id', user.id)
+    .upsert({ id: user.id, ...updates })
 
   if (error) {
     redirect('/perfil?error=update')

@@ -20,10 +20,18 @@ export default async function PerfilPage() {
     redirect('/login?next=/perfil')
   }
 
-  const profile = await getProfile(user.id)
-
-  if (!profile) {
-    redirect('/login?error=auth')
+  const profile = (await getProfile(user.id)) ?? {
+    id: user.id,
+    display_name: null,
+    bio: null,
+    avatar_url: null,
+    github_url: null,
+    linkedin_url: null,
+    twitter_url: null,
+    website_url: null,
+    role: 'member',
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   }
 
   return <ProfileForm profile={profile} email={user.email ?? ''} />
