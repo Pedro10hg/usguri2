@@ -60,6 +60,13 @@ export function UserMenu() {
               {user.email}
             </p>
           </div>
+          <Link
+            href="/perfil"
+            className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+          >
+            <UserIcon className="h-4 w-4" />
+            Meu Perfil
+          </Link>
           <form action={logout}>
             <button className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
               <LogOut className="h-4 w-4" />

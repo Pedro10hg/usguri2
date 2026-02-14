@@ -3,14 +3,18 @@ import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { ProjectCard } from '@/components/ProjectCard'
 import { AnimatedCard } from '@/components/ui/AnimatedCard'
-import { projects } from '@/data/projects'
+import { getProjects } from '@/lib/queries'
 
 export const metadata: Metadata = {
   title: 'Projetos',
   description: 'Projetos desenvolvidos pela comunidade Site dos Guri.',
 }
 
-export default function ProjetosPage() {
+export const revalidate = 300
+
+export default async function ProjetosPage() {
+  const projects = await getProjects()
+
   return (
     <section className="py-20">
       <Container>

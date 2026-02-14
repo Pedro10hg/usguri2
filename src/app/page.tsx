@@ -3,32 +3,14 @@ import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { AnimatedCard } from '@/components/ui/AnimatedCard'
 import { Card } from '@/components/ui/Card'
-import { Code2, Users, Lightbulb } from 'lucide-react'
+import { getFeatures } from '@/lib/queries'
+import { getIcon } from '@/lib/icons'
 
-const features = [
-  {
-    icon: Code2,
-    title: 'Código Limpo',
-    description:
-      'Praticamos as melhores práticas de desenvolvimento e revisão de código.',
-    color: 'text-guri-green-500',
-  },
-  {
-    icon: Users,
-    title: 'Comunidade',
-    description:
-      'Colaboração e troca de conhecimento entre os membros do grupo.',
-    color: 'text-guri-blue-500',
-  },
-  {
-    icon: Lightbulb,
-    title: 'Inovação',
-    description: 'Projetos com tecnologias modernas e abordagens criativas.',
-    color: 'text-guri-green-500',
-  },
-]
+export const revalidate = 300
 
-export default function Home() {
+export default async function Home() {
+  const features = await getFeatures()
+
   return (
     <>
       <Hero />
@@ -39,17 +21,20 @@ export default function Home() {
             subtitle="Somos um grupo dedicado a construir, aprender e evoluir juntos."
           />
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature, i) => (
-              <AnimatedCard key={feature.title} index={i}>
-                <Card>
-                  <feature.icon className={`mb-4 h-10 w-10 ${feature.color}`} />
-                  <h3 className="text-lg font-semibold">{feature.title}</h3>
-                  <p className="mt-2 text-slate-600 dark:text-slate-400">
-                    {feature.description}
-                  </p>
-                </Card>
-              </AnimatedCard>
-            ))}
+            {features.map((feature, i) => {
+              const Icon = getIcon(feature.icon_name)
+              return (
+                <AnimatedCard key={feature.id} index={i}>
+                  <Card>
+                    <Icon className={`mb-4 h-10 w-10 ${feature.color}`} />
+                    <h3 className="text-lg font-semibold">{feature.title}</h3>
+                    <p className="mt-2 text-slate-600 dark:text-slate-400">
+                      {feature.description}
+                    </p>
+                  </Card>
+                </AnimatedCard>
+              )
+            })}
           </div>
         </Container>
       </section>
