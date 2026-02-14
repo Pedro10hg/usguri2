@@ -1,7 +1,17 @@
 -- ============================================
 -- Site dos Guri — Schema SQL
 -- Rode este arquivo no Supabase Dashboard > SQL Editor
+-- Pode ser re-executado sem problemas (idempotente)
 -- ============================================
+
+-- Limpar tabelas e dados antigos (CASCADE remove policies e dependências)
+drop table if exists public.project_members cascade;
+drop table if exists public.projects cascade;
+drop table if exists public.members cascade;
+drop table if exists public.products cascade;
+drop table if exists public.momentos cascade;
+drop table if exists public.features cascade;
+drop table if exists public.profiles cascade;
 
 -- 1. Profiles (ligada a auth.users)
 create table if not exists public.profiles (
@@ -25,6 +35,9 @@ create policy "Perfis são públicos" on public.profiles
 
 create policy "Usuário edita próprio perfil" on public.profiles
   for update using (auth.uid() = id);
+
+create policy "Usuário insere próprio perfil" on public.profiles
+  for insert with check (auth.uid() = id);
 
 -- Trigger: criar perfil ao fazer signup
 create or replace function public.handle_new_user()
