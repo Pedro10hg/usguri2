@@ -6,6 +6,7 @@ import type { Member } from '@/types'
 export function MemberCard({ member }: { member: Member }) {
   return (
     <Card className="text-center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={resolveStorageUrl(member.avatar_url)}
         alt={member.name}

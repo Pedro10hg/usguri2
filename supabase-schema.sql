@@ -115,7 +115,7 @@ create table if not exists public.products (
   sizes text[] default '{}',
   colors text[] default '{}',
   whatsapp_url text,
-  active boolean default true,
+  is_active boolean default true,
   display_order int default 0,
   created_at timestamptz default now()
 );
@@ -136,6 +136,7 @@ create table if not exists public.momentos (
   icon_name text not null default 'Camera',
   title text not null,
   description text not null,
+  image_url text,
   display_order int default 0,
   created_at timestamptz default now()
 );
@@ -156,6 +157,7 @@ create table if not exists public.features (
   icon_name text not null default 'Code2',
   title text not null,
   description text not null,
+  color text not null default 'text-guri-green-500',
   display_order int default 0,
   created_at timestamptz default now()
 );
@@ -209,7 +211,7 @@ insert into public.momentos (icon_name, title, description, display_order) value
   ('Trophy', 'Primeiro Projeto', 'Lançamos nosso primeiro projeto open source juntos.', 4);
 
 -- Features
-insert into public.features (icon_name, title, description, display_order) values
-  ('Code2', 'Projetos Open Source', 'Colaboramos em projetos reais que fazem a diferença na comunidade dev.', 1),
-  ('Users', 'Comunidade Ativa', 'Um grupo unido que compartilha conhecimento e experiências.', 2),
-  ('Lightbulb', 'Inovação', 'Sempre explorando novas tecnologias e abordagens criativas.', 3);
+insert into public.features (icon_name, title, description, color, display_order) values
+  ('Code2', 'Projetos Open Source', 'Colaboramos em projetos reais que fazem a diferença na comunidade dev.', 'text-guri-green-500', 1),
+  ('Users', 'Comunidade Ativa', 'Um grupo unido que compartilha conhecimento e experiências.', 'text-guri-blue-500', 2),
+  ('Lightbulb', 'Inovação', 'Sempre explorando novas tecnologias e abordagens criativas.', 'text-yellow-500', 3);
