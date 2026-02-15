@@ -11,7 +11,34 @@ interface Disciplina {
   peso: string
 }
 
-const NOTA_MINIMA = 6.0
+type Status = 'aprovado' | 'recuperacao' | 'reprovado'
+
+function getStatus(media: number): Status {
+  if (media >= 7) return 'aprovado'
+  if (media >= 4) return 'recuperacao'
+  return 'reprovado'
+}
+
+const statusConfig: Record<Status, { label: string; subtitle: string; card: string; text: string }> = {
+  aprovado: {
+    label: 'Aprovado!',
+    subtitle: 'Nota mínima para aprovação direta: 7.0',
+    card: 'border-guri-green-200 bg-guri-green-50 dark:border-guri-green-800 dark:bg-guri-green-950',
+    text: 'text-guri-green-600 dark:text-guri-green-400',
+  },
+  recuperacao: {
+    label: 'Recuperação (A2)',
+    subtitle: 'Total Recuperação — média entre 4.0 e 6.9',
+    card: 'border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950',
+    text: 'text-yellow-600 dark:text-yellow-400',
+  },
+  reprovado: {
+    label: 'Reprovado',
+    subtitle: 'Média abaixo de 4.0',
+    card: 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950',
+    text: 'text-red-600 dark:text-red-400',
+  },
+}
 
 export function Calculator() {
   const [disciplinas, setDisciplinas] = useState<Disciplina[]>([
@@ -20,7 +47,7 @@ export function Calculator() {
   ])
   const [resultado, setResultado] = useState<{
     media: number
-    aprovado: boolean
+    status: Status
   } | null>(null)
   const [nextId, setNextId] = useState(3)
 
@@ -63,7 +90,7 @@ export function Calculator() {
     if (somaPesos === 0) return
 
     const media = somaProdutos / somaPesos
-    setResultado({ media, aprovado: media >= NOTA_MINIMA })
+    setResultado({ media, status: getStatus(media) })
   }
 
   function limpar() {
@@ -77,7 +104,7 @@ export function Calculator() {
 
   return (
     <div className="mx-auto max-w-2xl">
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 dark:border-slate-800 dark:bg-slate-900">
         <div className="space-y-3">
           {disciplinas.map((d, i) => (
             <motion.div
@@ -85,7 +112,7 @@ export function Calculator() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="flex items-center gap-3"
+              className="flex flex-wrap items-center gap-2 sm:gap-3"
             >
               <input
                 type="text"
@@ -94,7 +121,7 @@ export function Calculator() {
                 onChange={(e) =>
                   atualizarDisciplina(d.id, 'nome', e.target.value)
                 }
-                className="flex-1 rounded-lg border border-slate-200 bg-transparent px-3 py-2 text-sm outline-none transition-colors focus:border-guri-green-500 dark:border-slate-700"
+                className="w-full rounded-lg border border-slate-200 bg-transparent px-3 py-2 text-sm outline-none transition-colors focus:border-guri-green-500 sm:w-auto sm:flex-1 dark:border-slate-700"
               />
               <input
                 type="number"
@@ -106,7 +133,7 @@ export function Calculator() {
                 onChange={(e) =>
                   atualizarDisciplina(d.id, 'nota', e.target.value)
                 }
-                className="w-20 rounded-lg border border-slate-200 bg-transparent px-3 py-2 text-sm outline-none transition-colors focus:border-guri-green-500 dark:border-slate-700"
+                className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-transparent px-3 py-2 text-sm outline-none transition-colors focus:border-guri-green-500 sm:w-20 sm:flex-none dark:border-slate-700"
               />
               <input
                 type="number"
@@ -117,7 +144,7 @@ export function Calculator() {
                 onChange={(e) =>
                   atualizarDisciplina(d.id, 'peso', e.target.value)
                 }
-                className="w-20 rounded-lg border border-slate-200 bg-transparent px-3 py-2 text-sm outline-none transition-colors focus:border-guri-green-500 dark:border-slate-700"
+                className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-transparent px-3 py-2 text-sm outline-none transition-colors focus:border-guri-green-500 sm:w-20 sm:flex-none dark:border-slate-700"
               />
               <button
                 onClick={() => removerDisciplina(d.id)}
@@ -140,16 +167,16 @@ export function Calculator() {
           </button>
         </div>
 
-        <div className="mt-6 flex gap-3">
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <button
             onClick={calcular}
-            className="inline-flex items-center gap-2 rounded-xl bg-guri-green-500 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-guri-green-600 hover:shadow-md"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-guri-green-500 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-guri-green-600 hover:shadow-md"
           >
             <CalcIcon className="h-4 w-4" /> Calcular média
           </button>
           <button
             onClick={limpar}
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-6 py-3 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
+            className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 px-6 py-3 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
           >
             <RotateCcw className="h-4 w-4" /> Limpar
           </button>
@@ -163,35 +190,23 @@ export function Calculator() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ type: 'spring', duration: 0.5 }}
-            className={`mt-6 rounded-2xl border p-6 text-center ${
-              resultado.aprovado
-                ? 'border-guri-green-200 bg-guri-green-50 dark:border-guri-green-800 dark:bg-guri-green-950'
-                : 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950'
-            }`}
+            className={`mt-6 rounded-2xl border p-6 text-center ${statusConfig[resultado.status].card}`}
           >
             <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
               Média Ponderada
             </p>
             <p
-              className={`mt-1 text-5xl font-bold ${
-                resultado.aprovado
-                  ? 'text-guri-green-600 dark:text-guri-green-400'
-                  : 'text-red-600 dark:text-red-400'
-              }`}
+              className={`mt-1 text-5xl font-bold ${statusConfig[resultado.status].text}`}
             >
               {resultado.media.toFixed(2)}
             </p>
             <p
-              className={`mt-2 text-lg font-semibold ${
-                resultado.aprovado
-                  ? 'text-guri-green-600 dark:text-guri-green-400'
-                  : 'text-red-600 dark:text-red-400'
-              }`}
+              className={`mt-2 text-lg font-semibold ${statusConfig[resultado.status].text}`}
             >
-              {resultado.aprovado ? 'Aprovado!' : 'Reprovado'}
+              {statusConfig[resultado.status].label}
             </p>
             <p className="mt-1 text-xs text-slate-400">
-              Nota mínima para aprovação: {NOTA_MINIMA.toFixed(1)}
+              {statusConfig[resultado.status].subtitle}
             </p>
           </motion.div>
         )}

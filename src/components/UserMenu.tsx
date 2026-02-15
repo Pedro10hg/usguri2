@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import type { User } from '@supabase/supabase-js'
 import { LogIn, LogOut, User as UserIcon, Shield } from 'lucide-react'
@@ -18,6 +18,8 @@ export function UserMenu() {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<ProfileData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [open, setOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const supabase = createClient()
@@ -58,6 +60,21 @@ export function UserMenu() {
     return () => subscription.unsubscribe()
   }, [])
 
+  useEffect(() => {
+    if (!open) return
+    function handleClickOutside(e: MouseEvent | TouchEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('touchstart', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+    }
+  }, [open])
+
   if (loading) {
     return (
       <div className="h-8 w-8 animate-pulse rounded-full bg-slate-200 dark:bg-slate-700" />
@@ -84,8 +101,11 @@ export function UserMenu() {
     .toUpperCase()
 
   return (
-    <div className="group relative">
-      <button className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-guri-green-500 text-xs font-bold text-white">
+    <div className="relative" ref={menuRef}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-guri-green-500 text-xs font-bold text-white"
+      >
         {avatarSrc ? (
           <img
             src={avatarSrc}
@@ -96,42 +116,46 @@ export function UserMenu() {
           initials
         )}
       </button>
-      <div className="invisible absolute right-0 top-full pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
-        <div className="w-48 rounded-xl border border-slate-200 bg-white p-2 shadow-lg dark:border-slate-700 dark:bg-slate-900">
-          <div className="border-b border-slate-100 px-3 py-2 dark:border-slate-800">
-            {profile?.username && (
-              <p className="truncate text-sm font-medium text-slate-700 dark:text-slate-200">
-                @{profile.username}
+      {open && (
+        <div className="absolute right-0 top-full pt-2">
+          <div className="w-48 rounded-xl border border-slate-200 bg-white p-2 shadow-lg dark:border-slate-700 dark:bg-slate-900">
+            <div className="border-b border-slate-100 px-3 py-2 dark:border-slate-800">
+              {profile?.username && (
+                <p className="truncate text-sm font-medium text-slate-700 dark:text-slate-200">
+                  @{profile.username}
+                </p>
+              )}
+              <p className="truncate text-xs text-slate-500 dark:text-slate-400">
+                {user.email}
               </p>
-            )}
-            <p className="truncate text-xs text-slate-500 dark:text-slate-400">
-              {user.email}
-            </p>
-          </div>
-          <Link
-            href="/perfil"
-            className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
-          >
-            <UserIcon className="h-4 w-4" />
-            Meu Perfil
-          </Link>
-          {profile?.role === 'admin' && (
+            </div>
             <Link
-              href="/admin"
-              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+              href="/perfil"
+              onClick={() => setOpen(false)}
+              className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
             >
-              <Shield className="h-4 w-4" />
-              Admin
+              <UserIcon className="h-4 w-4" />
+              Meu Perfil
             </Link>
-          )}
-          <form action={logout}>
-            <button className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
-              <LogOut className="h-4 w-4" />
-              Sair
-            </button>
-          </form>
+            {profile?.role === 'admin' && (
+              <Link
+                href="/admin"
+                onClick={() => setOpen(false)}
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+              >
+                <Shield className="h-4 w-4" />
+                Admin
+              </Link>
+            )}
+            <form action={logout}>
+              <button className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
+                <LogOut className="h-4 w-4" />
+                Sair
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
