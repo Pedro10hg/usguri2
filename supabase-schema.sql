@@ -247,3 +247,91 @@ insert into public.features (icon_name, title, description, color, display_order
   ('Flame', 'Resenha Garantida', 'Onde os Guri se juntam, a diversão é certa. Sem tempo ruim.', 'text-guri-green-500', 1),
   ('Users', 'Parceria Firmeza', 'Um grupo unido que tá junto em qualquer rolê, chuva ou sol.', 'text-guri-blue-500', 2),
   ('MapPin', 'Rolê Marcado', 'Sempre tem algo acontecendo. Churrasco, pelada, praia — é só colar.', 'text-yellow-500', 3);
+
+-- ============================================
+-- GALERIA (Gallery)
+-- ============================================
+
+drop table if exists public.gallery_comments cascade;
+drop table if exists public.gallery_reactions cascade;
+drop table if exists public.gallery_posts cascade;
+
+-- 8. Gallery Posts
+create table if not exists public.gallery_posts (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  image_url text not null,
+  caption text,
+  created_at timestamptz default now()
+);
+
+alter table public.gallery_posts enable row level security;
+
+create policy "Posts da galeria são públicos" on public.gallery_posts
+  for select using (true);
+
+create policy "Usuário cria próprio post" on public.gallery_posts
+  for insert with check (auth.uid() = user_id);
+
+create policy "Usuário deleta próprio post" on public.gallery_posts
+  for delete using (auth.uid() = user_id);
+
+-- 9. Gallery Reactions
+create table if not exists public.gallery_reactions (
+  id uuid default gen_random_uuid() primary key,
+  post_id uuid references public.gallery_posts(id) on delete cascade not null,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  reaction_type text not null check (reaction_type in ('like', 'love', 'fire')),
+  created_at timestamptz default now(),
+  unique (post_id, user_id, reaction_type)
+);
+
+alter table public.gallery_reactions enable row level security;
+
+create policy "Reações são públicas" on public.gallery_reactions
+  for select using (true);
+
+create policy "Usuário cria própria reação" on public.gallery_reactions
+  for insert with check (auth.uid() = user_id);
+
+create policy "Usuário remove própria reação" on public.gallery_reactions
+  for delete using (auth.uid() = user_id);
+
+-- 10. Gallery Comments
+create table if not exists public.gallery_comments (
+  id uuid default gen_random_uuid() primary key,
+  post_id uuid references public.gallery_posts(id) on delete cascade not null,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  content text not null,
+  created_at timestamptz default now()
+);
+
+alter table public.gallery_comments enable row level security;
+
+create policy "Comentários são públicos" on public.gallery_comments
+  for select using (true);
+
+create policy "Usuário cria próprio comentário" on public.gallery_comments
+  for insert with check (auth.uid() = user_id);
+
+create policy "Usuário deleta próprio comentário" on public.gallery_comments
+  for delete using (auth.uid() = user_id);
+
+-- ============================================
+-- STORAGE (gallery)
+-- ============================================
+
+insert into storage.buckets (id, name, public) values ('gallery', 'gallery', true)
+on conflict (id) do nothing;
+
+drop policy if exists "Fotos da galeria são públicas" on storage.objects;
+create policy "Fotos da galeria são públicas" on storage.objects
+  for select using (bucket_id = 'gallery');
+
+drop policy if exists "Usuário faz upload na galeria" on storage.objects;
+create policy "Usuário faz upload na galeria" on storage.objects
+  for insert with check (bucket_id = 'gallery' and auth.role() = 'authenticated');
+
+drop policy if exists "Usuário deleta foto da galeria" on storage.objects;
+create policy "Usuário deleta foto da galeria" on storage.objects
+  for delete using (bucket_id = 'gallery' and auth.role() = 'authenticated');
