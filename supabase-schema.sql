@@ -193,12 +193,15 @@ create policy "Admin gerencia features" on public.features
 insert into storage.buckets (id, name, public) values ('avatars', 'avatars', true)
 on conflict (id) do nothing;
 
+drop policy if exists "Avatars são públicos" on storage.objects;
 create policy "Avatars são públicos" on storage.objects
   for select using (bucket_id = 'avatars');
 
+drop policy if exists "Usuário faz upload de avatar" on storage.objects;
 create policy "Usuário faz upload de avatar" on storage.objects
   for insert with check (bucket_id = 'avatars' and auth.role() = 'authenticated');
 
+drop policy if exists "Usuário deleta próprio avatar" on storage.objects;
 create policy "Usuário deleta próprio avatar" on storage.objects
   for delete using (bucket_id = 'avatars' and auth.role() = 'authenticated');
 
