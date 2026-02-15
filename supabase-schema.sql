@@ -16,6 +16,7 @@ drop table if exists public.profiles cascade;
 -- 1. Profiles (ligada a auth.users)
 create table if not exists public.profiles (
   id uuid references auth.users on delete cascade primary key,
+  username text unique,
   display_name text,
   bio text,
   avatar_url text,

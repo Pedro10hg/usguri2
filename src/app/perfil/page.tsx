@@ -22,6 +22,7 @@ export default async function PerfilPage() {
 
   const profile = (await getProfile(user.id)) ?? {
     id: user.id,
+    username: null,
     display_name: null,
     bio: null,
     avatar_url: null,

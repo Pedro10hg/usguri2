@@ -16,6 +16,7 @@ export async function updateProfile(formData: FormData) {
   }
 
   const updates = {
+    username: (formData.get('username') as string) || null,
     display_name: (formData.get('display_name') as string) || null,
     bio: (formData.get('bio') as string) || null,
     avatar_url: (formData.get('avatar_url') as string) || null,

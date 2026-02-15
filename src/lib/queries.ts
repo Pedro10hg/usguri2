@@ -92,3 +92,14 @@ export async function getProfile(userId: string): Promise<Profile | null> {
   if (error) return null
   return data
 }
+
+export async function getProfileByUsername(username: string): Promise<Profile | null> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('username', username)
+    .single()
+  if (error) return null
+  return data
+}
