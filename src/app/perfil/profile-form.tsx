@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import {
   User,
+  AtSign,
   FileText,
   Instagram,
   Linkedin,
@@ -69,6 +70,26 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
                 onUpload={setAvatarUrl}
               />
               <input type="hidden" name="avatar_url" value={avatarUrl} />
+            </div>
+
+            <div>
+              <label
+                htmlFor="username"
+                className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
+              >
+                Username
+              </label>
+              <div className="relative">
+                <AtSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  defaultValue={profile.username ?? ''}
+                  placeholder="seu_username"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm transition-colors focus:border-guri-green-500 focus:outline-none focus:ring-1 focus:ring-guri-green-500 dark:border-slate-700 dark:bg-slate-800 dark:placeholder-slate-500"
+                />
+              </div>
             </div>
 
             <div>

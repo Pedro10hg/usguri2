@@ -7,8 +7,15 @@ import { LogIn, LogOut, User as UserIcon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { logout } from '@/app/login/actions'
 
+interface ProfileData {
+  username: string | null
+  display_name: string | null
+  avatar_url: string | null
+}
+
 export function UserMenu() {
   const [user, setUser] = useState<User | null>(null)
+  const [profile, setProfile] = useState<ProfileData | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -17,12 +24,34 @@ export function UserMenu() {
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user)
       setLoading(false)
+      if (user) {
+        supabase
+          .from('profiles')
+          .select('username, display_name, avatar_url')
+          .eq('id', user.id)
+          .single()
+          .then(({ data }) => {
+            if (data) setProfile(data)
+          })
+      }
     })
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
+      if (session?.user) {
+        supabase
+          .from('profiles')
+          .select('username, display_name, avatar_url')
+          .eq('id', session.user.id)
+          .single()
+          .then(({ data }) => {
+            if (data) setProfile(data)
+          })
+      } else {
+        setProfile(null)
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -46,16 +75,34 @@ export function UserMenu() {
     )
   }
 
-  const initials = (user.email ?? 'U').slice(0, 2).toUpperCase()
+  const avatarSrc = profile?.avatar_url
+    ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${profile.avatar_url}`
+    : null
+  const initials = (profile?.display_name ?? user.email ?? 'U')
+    .slice(0, 2)
+    .toUpperCase()
 
   return (
     <div className="group relative">
-      <button className="flex h-8 w-8 items-center justify-center rounded-full bg-guri-green-500 text-xs font-bold text-white">
-        {initials}
+      <button className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-guri-green-500 text-xs font-bold text-white">
+        {avatarSrc ? (
+          <img
+            src={avatarSrc}
+            alt="Avatar"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          initials
+        )}
       </button>
       <div className="invisible absolute right-0 top-full pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
         <div className="w-48 rounded-xl border border-slate-200 bg-white p-2 shadow-lg dark:border-slate-700 dark:bg-slate-900">
           <div className="border-b border-slate-100 px-3 py-2 dark:border-slate-800">
+            {profile?.username && (
+              <p className="truncate text-sm font-medium text-slate-700 dark:text-slate-200">
+                @{profile.username}
+              </p>
+            )}
             <p className="truncate text-xs text-slate-500 dark:text-slate-400">
               {user.email}
             </p>
