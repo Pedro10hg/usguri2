@@ -71,6 +71,7 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
+            <UserMenu />
             <ThemeToggle />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -124,9 +125,6 @@ export function Navbar() {
                   </span>
                 </Link>
 
-                <div className="mt-2 px-4">
-                  <UserMenu />
-                </div>
               </div>
             </motion.div>
           )}
