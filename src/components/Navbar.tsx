@@ -71,8 +71,8 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
-            <UserMenu />
             <ThemeToggle />
+            <UserMenu />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="rounded-lg p-2"
