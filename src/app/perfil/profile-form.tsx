@@ -14,7 +14,9 @@ import {
   AlertCircle,
   Check,
   Save,
+  Eye,
 } from 'lucide-react'
+import Link from 'next/link'
 import { Container } from '@/components/ui/Container'
 import { AvatarUpload } from '@/components/AvatarUpload'
 import { updateProfile } from './actions'
@@ -44,6 +46,15 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
             <p className="mt-2 text-slate-600 dark:text-slate-400">
               {email}
             </p>
+            {profile.username && (
+              <Link
+                href={`/perfil/${profile.username}`}
+                className="mt-3 inline-flex items-center gap-1.5 text-sm text-guri-green-500 hover:underline"
+              >
+                <Eye className="h-4 w-4" />
+                Ver como os outros veem meu perfil
+              </Link>
+            )}
           </div>
 
           {error === 'update' && (

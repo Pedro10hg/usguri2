@@ -52,14 +52,16 @@ export function GalleryDetail({ post, currentUserId }: Props) {
 
       <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          {avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={avatarUrl} alt="" className="h-8 w-8 rounded-full object-cover" />
-          ) : (
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-guri-green-500 text-xs font-bold text-white">
-              {(post.profile?.display_name ?? '?').slice(0, 1).toUpperCase()}
-            </div>
-          )}
+          <Link href={`/perfil/${post.profile?.username ?? ''}`}>
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={avatarUrl} alt="" className="h-8 w-8 rounded-full object-cover" />
+            ) : (
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-guri-green-500 text-xs font-bold text-white">
+                {(post.profile?.display_name ?? '?').slice(0, 1).toUpperCase()}
+              </div>
+            )}
+          </Link>
           <div>
             <Link
               href={`/perfil/${post.profile?.username ?? ''}`}
