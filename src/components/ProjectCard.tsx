@@ -1,4 +1,4 @@
-import { ExternalLink, Github } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import type { Project } from '@/types'
 
@@ -10,24 +10,19 @@ export function ProjectCard({ project }: { project: Project }) {
         {project.description}
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
-        {project.tech_stack.map((tech) => (
-          <span key={tech} className="rounded-full bg-guri-green-50 px-3 py-1 text-xs font-medium text-guri-green-700 dark:bg-guri-green-950 dark:text-guri-green-300">
-            {tech}
+        {project.tags.map((tag) => (
+          <span key={tag} className="rounded-full bg-guri-green-50 px-3 py-1 text-xs font-medium text-guri-green-700 dark:bg-guri-green-950 dark:text-guri-green-300">
+            {tag}
           </span>
         ))}
       </div>
-      <div className="mt-4 flex gap-3">
-        {project.repo_url && (
-          <a href={project.repo_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm text-slate-500 transition-colors hover:text-guri-blue-500">
-            <Github className="h-4 w-4" /> Código
-          </a>
-        )}
-        {project.live_url && (
+      {project.live_url && (
+        <div className="mt-4">
           <a href={project.live_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm text-slate-500 transition-colors hover:text-guri-blue-500">
-            <ExternalLink className="h-4 w-4" /> Demo
+            <ExternalLink className="h-4 w-4" /> Ver mais
           </a>
-        )}
-      </div>
+        </div>
+      )}
     </Card>
   )
 }

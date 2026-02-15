@@ -1,4 +1,4 @@
-import { Github, Linkedin, Globe } from 'lucide-react'
+import { Instagram, Linkedin, Globe } from 'lucide-react'
 import { Card } from '@/components/ui/Card'
 import { resolveStorageUrl } from '@/lib/queries'
 import type { Member } from '@/types'
@@ -20,9 +20,9 @@ export function MemberCard({ member }: { member: Member }) {
         {member.bio}
       </p>
       <div className="mt-4 flex justify-center gap-3">
-        {member.github_url && (
-          <a href={member.github_url} target="_blank" rel="noopener noreferrer" className="text-slate-400 transition-colors hover:text-guri-blue-500">
-            <Github className="h-5 w-5" />
+        {member.instagram_url && (
+          <a href={member.instagram_url} target="_blank" rel="noopener noreferrer" className="text-slate-400 transition-colors hover:text-guri-blue-500">
+            <Instagram className="h-5 w-5" />
           </a>
         )}
         {member.linkedin_url && (

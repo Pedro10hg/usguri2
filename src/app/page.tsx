@@ -18,7 +18,7 @@ export default async function Home() {
         <Container>
           <SectionHeading
             title="O que nos move"
-            subtitle="Somos um grupo dedicado a construir, aprender e evoluir juntos."
+            subtitle="Resenha, parceria e rolê — isso é o que move os Guri."
           />
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, i) => {

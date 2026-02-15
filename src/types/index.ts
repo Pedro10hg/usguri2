@@ -4,7 +4,7 @@ export interface Member {
   role: string
   bio: string | null
   avatar_url: string | null
-  github_url: string | null
+  instagram_url: string | null
   linkedin_url: string | null
   twitter_url: string | null
   website_url: string | null
@@ -17,7 +17,7 @@ export interface Project {
   title: string
   description: string
   image_url: string | null
-  tech_stack: string[]
+  tags: string[]
   repo_url: string | null
   live_url: string | null
   display_order: number
@@ -63,7 +63,7 @@ export interface Profile {
   display_name: string | null
   bio: string | null
   avatar_url: string | null
-  github_url: string | null
+  instagram_url: string | null
   linkedin_url: string | null
   twitter_url: string | null
   website_url: string | null

@@ -25,7 +25,7 @@ export default async function PerfilPage() {
     display_name: null,
     bio: null,
     avatar_url: null,
-    github_url: null,
+    instagram_url: null,
     linkedin_url: null,
     twitter_url: null,
     website_url: null,

@@ -19,7 +19,7 @@ create table if not exists public.profiles (
   display_name text,
   bio text,
   avatar_url text,
-  github_url text,
+  instagram_url text,
   linkedin_url text,
   twitter_url text,
   website_url text,
@@ -61,7 +61,7 @@ create table if not exists public.members (
   role text not null,
   bio text,
   avatar_url text,
-  github_url text,
+  instagram_url text,
   linkedin_url text,
   twitter_url text,
   website_url text,
@@ -79,13 +79,13 @@ create policy "Admin gerencia membros" on public.members
     exists (select 1 from public.profiles where id = auth.uid() and role = 'admin')
   );
 
--- 3. Projects
+-- 3. Projects (Rolês)
 create table if not exists public.projects (
   id uuid default gen_random_uuid() primary key,
   title text not null,
   description text not null,
   image_url text,
-  tech_stack text[] default '{}',
+  tags text[] default '{}',
   repo_url text,
   live_url text,
   display_order int default 0,
@@ -167,7 +167,7 @@ create policy "Admin gerencia momentos" on public.momentos
 -- 7. Features (cards da homepage)
 create table if not exists public.features (
   id uuid default gen_random_uuid() primary key,
-  icon_name text not null default 'Code2',
+  icon_name text not null default 'Users',
   title text not null,
   description text not null,
   color text not null default 'text-guri-green-500',
@@ -186,31 +186,46 @@ create policy "Admin gerencia features" on public.features
   );
 
 -- ============================================
+-- STORAGE (avatars)
+-- ============================================
+
+insert into storage.buckets (id, name, public) values ('avatars', 'avatars', true)
+on conflict (id) do nothing;
+
+create policy "Avatars são públicos" on storage.objects
+  for select using (bucket_id = 'avatars');
+
+create policy "Usuário faz upload de avatar" on storage.objects
+  for insert with check (bucket_id = 'avatars' and auth.role() = 'authenticated');
+
+create policy "Usuário deleta próprio avatar" on storage.objects
+  for delete using (bucket_id = 'avatars' and auth.role() = 'authenticated');
+
+-- ============================================
 -- SEED DATA
 -- ============================================
 
 -- Membros
-insert into public.members (name, role, bio, avatar_url, github_url, linkedin_url, twitter_url, website_url, display_order) values
-  ('Johnson', 'Administrador', 'Rei do beat pegou a visão?', 'avatars/pedro.jpg', 'https://github.com', 'https://linkedin.com', null, null, 1),
-  ('GHJ', 'Administrador', 'Fodase essa descrição.', 'avatars/gabriel.jpg', 'https://github.com', null, 'https://twitter.com', null, 2),
-  ('THG', 'Administrador', 'Fodase essa descrição.', 'avatars/thalis.jpg', 'https://github.com', 'https://linkedin.com', null, 'https://example.com', 3),
-  ('Kaio Maconheiro', 'Criou essa merda', 'Fodase.', 'avatars/kaio.jpg', 'https://github.com', null, null, null, 4);
+insert into public.members (name, role, bio, avatar_url, instagram_url, linkedin_url, twitter_url, website_url, display_order) values
+  ('Johnson', 'Fundador', 'Rei do beat pegou a visão?', 'avatars/pedro.jpg', 'https://instagram.com', null, null, null, 1),
+  ('GHJ', 'O Resenha', 'Fodase essa descrição.', 'avatars/gabriel.jpg', 'https://instagram.com', null, 'https://twitter.com', null, 2),
+  ('THG', 'Braço Direito', 'Fodase essa descrição.', 'avatars/thalis.jpg', 'https://instagram.com', null, null, null, 3),
+  ('Kaio Maconheiro', 'Criou essa merda', 'Fodase.', 'avatars/kaio.jpg', 'https://instagram.com', null, null, null, 4);
 
--- Projetos
-with m as (select id, name from public.members)
-insert into public.projects (title, description, tech_stack, repo_url, live_url, display_order) values
-  ('Site dos Guri', 'Website da comunidade, construído com as tecnologias mais modernas do ecossistema React.', '{"Next.js","React","TypeScript","Tailwind CSS","Supabase"}', 'https://github.com', 'https://example.com', 1),
-  ('API de Gerenciamento', 'API RESTful para gerenciamento de projetos e tarefas da comunidade com autenticação JWT.', '{"Node.js","Express","PostgreSQL","Prisma"}', 'https://github.com', null, 2),
-  ('Bot Discord', 'Bot para o servidor da comunidade com comandos personalizados, moderação e integrações.', '{"Discord.js","TypeScript","Redis"}', 'https://github.com', null, 3),
-  ('Mobile App', 'Aplicativo mobile da comunidade para acompanhar projetos e se conectar com os membros.', '{"React Native","Expo","TypeScript","Supabase"}', null, null, 4);
+-- Rolês
+insert into public.projects (title, description, tags, repo_url, live_url, display_order) values
+  ('Churrasco dos Guri', 'O clássico churras do grupo. Carne, música e muita resenha do começo ao fim.', '{"Churrasco","Resenha","Clássico"}', null, null, 1),
+  ('Pelada de Domingo', 'Futebol sagrado de todo domingo. Quem perde paga o açaí.', '{"Futebol","Domingo","Tradição"}', null, null, 2),
+  ('Rolê de Praia', 'Dia de sol, prancha e cooler cheio. O rolê mais esperado do verão.', '{"Praia","Verão","Aventura"}', null, null, 3),
+  ('Noite de Jogos', 'Truco, sinuca, videogame — vale tudo menos perder.', '{"Jogos","Noite","Competição"}', null, null, 4);
 
 -- Project Members (relações)
 insert into public.project_members (project_id, member_id)
 select p.id, m.id from public.projects p, public.members m
-where (p.title = 'Site dos Guri' and m.name in ('Johnson', 'GHJ'))
-   or (p.title = 'API de Gerenciamento' and m.name in ('THG', 'Kaio Maconheiro'))
-   or (p.title = 'Bot Discord' and m.name in ('GHJ', 'THG'))
-   or (p.title = 'Mobile App' and m.name in ('Johnson', 'Kaio Maconheiro'));
+where (p.title = 'Churrasco dos Guri' and m.name in ('Johnson', 'GHJ'))
+   or (p.title = 'Pelada de Domingo' and m.name in ('THG', 'Kaio Maconheiro'))
+   or (p.title = 'Rolê de Praia' and m.name in ('GHJ', 'THG'))
+   or (p.title = 'Noite de Jogos' and m.name in ('Johnson', 'Kaio Maconheiro'));
 
 -- Produto
 insert into public.products (name, description, image_url, sizes, colors, whatsapp_url, display_order) values
@@ -218,13 +233,13 @@ insert into public.products (name, description, image_url, sizes, colors, whatsa
 
 -- Momentos
 insert into public.momentos (icon_name, title, description, display_order) values
-  ('Camera', 'O Começo', 'Um grupo de amigos com a mesma paixão por tecnologia decidiu se juntar.', 1),
-  ('PartyPopper', 'Primeiro Evento', 'Organizamos nosso primeiro encontro presencial com a comunidade local.', 2),
-  ('Coffee', 'Café & Code', 'Sessões semanais de programação em grupo se tornaram tradição.', 3),
-  ('Trophy', 'Primeiro Projeto', 'Lançamos nosso primeiro projeto open source juntos.', 4);
+  ('Camera', 'O Começo', 'Um grupo de amigos que se conheceu e decidiu que a resenha não podia parar.', 1),
+  ('PartyPopper', 'Primeiro Rolê', 'O primeiro churras oficial do grupo. Ninguém esquece aquele dia.', 2),
+  ('Coffee', 'Tradição Firmada', 'Os encontros viraram rotina — todo fim de semana tinha algo marcado.', 3),
+  ('Trophy', 'Virou Família', 'De amigos a irmãos. O grupo cresceu e a resenha só ficou melhor.', 4);
 
 -- Features
 insert into public.features (icon_name, title, description, color, display_order) values
-  ('Code2', 'Projetos Open Source', 'Colaboramos em projetos reais que fazem a diferença na comunidade dev.', 'text-guri-green-500', 1),
-  ('Users', 'Comunidade Ativa', 'Um grupo unido que compartilha conhecimento e experiências.', 'text-guri-blue-500', 2),
-  ('Lightbulb', 'Inovação', 'Sempre explorando novas tecnologias e abordagens criativas.', 'text-yellow-500', 3);
+  ('Flame', 'Resenha Garantida', 'Onde os Guri se juntam, a diversão é certa. Sem tempo ruim.', 'text-guri-green-500', 1),
+  ('Users', 'Parceria Firmeza', 'Um grupo unido que tá junto em qualquer rolê, chuva ou sol.', 'text-guri-blue-500', 2),
+  ('MapPin', 'Rolê Marcado', 'Sempre tem algo acontecendo. Churrasco, pelada, praia — é só colar.', 'text-yellow-500', 3);

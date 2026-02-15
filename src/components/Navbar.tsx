@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, Code2, Gamepad2 } from 'lucide-react'
+import { Menu, X, Users, Gamepad2 } from 'lucide-react'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { UserMenu } from '@/components/UserMenu'
 import { Container } from '@/components/ui/Container'
@@ -14,7 +14,7 @@ const navLinks = [
   { href: '/sobre', label: 'Sobre Nós' },
   { href: '/servicos', label: 'Serviços' },
   { href: '/ferramentas', label: 'Ferramentas' },
-  { href: '/projetos', label: 'Projetos' },
+  { href: '/projetos', label: 'Rolês' },
 ]
 
 export function Navbar() {
@@ -27,7 +27,7 @@ export function Navbar() {
       <Container>
         <nav className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-            <Code2 className="h-6 w-6 text-guri-green-500" />
+            <Users className="h-6 w-6 text-guri-green-500" />
             <span>
               Site dos <span className="text-guri-green-500">Guri</span>
             </span>

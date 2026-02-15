@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Rocket, ArrowRight } from 'lucide-react'
+import { Flame, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 
@@ -19,7 +19,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <Rocket className="mx-auto mb-6 h-16 w-16 text-guri-green-500" />
+          <Flame className="mx-auto mb-6 h-16 w-16 text-guri-green-500" />
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
             Site dos{' '}
             <span className="bg-gradient-to-r from-guri-green-500 to-guri-blue-500 bg-clip-text text-transparent">
@@ -27,8 +27,8 @@ export function Hero() {
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
-            Um grupo de alunos apaixonados por tecnologia, resenha e
-            colaboração. Código limpo, ideias grandes.
+            Um grupo de amigos unidos pela resenha, pelo rolê e pela parceria.
+            Onde os Guri se juntam, a diversão é garantida.
           </p>
         </motion.div>
 
@@ -42,7 +42,7 @@ export function Hero() {
             Conheça o time <ArrowRight className="h-4 w-4" />
           </Button>
           <Button href="/projetos" variant="secondary">
-            Ver projetos
+            Ver rolês
           </Button>
         </motion.div>
       </Container>

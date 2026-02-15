@@ -65,7 +65,7 @@ export default async function SobrePage() {
         <Container>
           <SectionHeading
             title="Os Guri"
-            subtitle="O time por trás dos projetos e da resenha."
+            subtitle="O time por trás de toda a resenha."
           />
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {members.map((member, i) => (
