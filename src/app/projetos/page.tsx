@@ -6,8 +6,8 @@ import { AnimatedCard } from '@/components/ui/AnimatedCard'
 import { getProjects } from '@/lib/queries'
 
 export const metadata: Metadata = {
-  title: 'Projetos',
-  description: 'Projetos desenvolvidos pela comunidade Site dos Guri.',
+  title: 'Rolês',
+  description: 'Os rolês e atividades do grupo dos Guri.',
 }
 
 export const revalidate = 300
@@ -19,8 +19,8 @@ export default async function ProjetosPage() {
     <section className="py-20">
       <Container>
         <SectionHeading
-          title="Nossos Projetos"
-          subtitle="O que estamos construindo juntos."
+          title="Nossos Rolês"
+          subtitle="O que os Guri aprontam juntos."
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, i) => (

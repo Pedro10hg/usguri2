@@ -3,13 +3,15 @@ import {
   PartyPopper,
   Coffee,
   Trophy,
-  Code2,
   Users,
   Lightbulb,
   Shirt,
   Ruler,
   Palette,
   MessageCircle,
+  Flame,
+  Music,
+  MapPin,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -18,15 +20,17 @@ const iconMap: Record<string, LucideIcon> = {
   PartyPopper,
   Coffee,
   Trophy,
-  Code2,
   Users,
   Lightbulb,
   Shirt,
   Ruler,
   Palette,
   MessageCircle,
+  Flame,
+  Music,
+  MapPin,
 }
 
 export function getIcon(name: string): LucideIcon {
-  return iconMap[name] ?? Code2
+  return iconMap[name] ?? Users
 }

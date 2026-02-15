@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     template: '%s | Site dos Guri',
   },
   description:
-    'Comunidade de desenvolvedores apaixonados por código limpo e tecnologia de ponta.',
+    'O grupo dos Guri — resenha, amizade e muito rolê.',
 }
 
 export default function RootLayout({

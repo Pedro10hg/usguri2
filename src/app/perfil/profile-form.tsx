@@ -1,11 +1,12 @@
 'use client'
 
+import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { motion } from 'framer-motion'
 import {
   User,
   FileText,
-  Github,
+  Instagram,
   Linkedin,
   Twitter,
   Globe,
@@ -14,6 +15,7 @@ import {
   Save,
 } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
+import { AvatarUpload } from '@/components/AvatarUpload'
 import { updateProfile } from './actions'
 import type { Profile } from '@/types'
 
@@ -26,6 +28,7 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
   const success = searchParams.get('success')
+  const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url ?? '')
 
   return (
     <section className="py-20">
@@ -60,6 +63,14 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
             action={updateProfile}
             className="space-y-4 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900"
           >
+            <div className="flex justify-center">
+              <AvatarUpload
+                currentUrl={profile.avatar_url}
+                onUpload={setAvatarUrl}
+              />
+              <input type="hidden" name="avatar_url" value={avatarUrl} />
+            </div>
+
             <div>
               <label
                 htmlFor="display_name"
@@ -102,19 +113,19 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
 
             <div>
               <label
-                htmlFor="github_url"
+                htmlFor="instagram_url"
                 className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
               >
-                GitHub
+                Instagram
               </label>
               <div className="relative">
-                <Github className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Instagram className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <input
-                  id="github_url"
-                  name="github_url"
+                  id="instagram_url"
+                  name="instagram_url"
                   type="url"
-                  defaultValue={profile.github_url ?? ''}
-                  placeholder="https://github.com/seu-user"
+                  defaultValue={profile.instagram_url ?? ''}
+                  placeholder="https://instagram.com/seu-user"
                   className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm transition-colors focus:border-guri-green-500 focus:outline-none focus:ring-1 focus:ring-guri-green-500 dark:border-slate-700 dark:bg-slate-800 dark:placeholder-slate-500"
                 />
               </div>
