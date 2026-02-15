@@ -15,6 +15,7 @@ const navLinks = [
   { href: '/servicos', label: 'Serviços' },
   { href: '/ferramentas', label: 'Ferramentas' },
   { href: '/projetos', label: 'Rolês' },
+  { href: '/galeria', label: 'Galeria' },
 ]
 
 export function Navbar() {

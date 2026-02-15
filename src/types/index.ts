@@ -72,3 +72,39 @@ export interface Profile {
   created_at: string
   updated_at: string
 }
+
+export interface GalleryPost {
+  id: string
+  user_id: string
+  image_url: string
+  caption: string | null
+  created_at: string
+  profile?: Pick<Profile, 'id' | 'username' | 'display_name' | 'avatar_url'>
+  reactions?: GalleryReaction[]
+  comments?: GalleryComment[]
+  reaction_counts?: ReactionCount[]
+  comment_count?: number
+}
+
+export interface GalleryReaction {
+  id: string
+  post_id: string
+  user_id: string
+  reaction_type: 'like' | 'love' | 'fire'
+  created_at: string
+  profile?: Pick<Profile, 'id' | 'username' | 'display_name' | 'avatar_url'>
+}
+
+export interface GalleryComment {
+  id: string
+  post_id: string
+  user_id: string
+  content: string
+  created_at: string
+  profile?: Pick<Profile, 'id' | 'username' | 'display_name' | 'avatar_url'>
+}
+
+export interface ReactionCount {
+  reaction_type: 'like' | 'love' | 'fire'
+  count: number
+}
