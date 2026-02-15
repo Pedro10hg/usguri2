@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import type { User } from '@supabase/supabase-js'
-import { LogIn, LogOut, User as UserIcon } from 'lucide-react'
+import { LogIn, LogOut, User as UserIcon, Shield } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { logout } from '@/app/login/actions'
 
@@ -11,6 +11,7 @@ interface ProfileData {
   username: string | null
   display_name: string | null
   avatar_url: string | null
+  role: string | null
 }
 
 export function UserMenu() {
@@ -27,7 +28,7 @@ export function UserMenu() {
       if (user) {
         supabase
           .from('profiles')
-          .select('username, display_name, avatar_url')
+          .select('username, display_name, avatar_url, role')
           .eq('id', user.id)
           .single()
           .then(({ data }) => {
@@ -43,7 +44,7 @@ export function UserMenu() {
       if (session?.user) {
         supabase
           .from('profiles')
-          .select('username, display_name, avatar_url')
+          .select('username, display_name, avatar_url, role')
           .eq('id', session.user.id)
           .single()
           .then(({ data }) => {
@@ -114,6 +115,15 @@ export function UserMenu() {
             <UserIcon className="h-4 w-4" />
             Meu Perfil
           </Link>
+          {profile?.role === 'admin' && (
+            <Link
+              href="/admin"
+              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800"
+            >
+              <Shield className="h-4 w-4" />
+              Admin
+            </Link>
+          )}
           <form action={logout}>
             <button className="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 transition-colors hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950">
               <LogOut className="h-4 w-4" />

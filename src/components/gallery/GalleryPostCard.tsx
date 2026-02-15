@@ -28,14 +28,16 @@ export function GalleryPostCard({ post, currentUserId }: Props) {
       </Link>
       <div className="p-4">
         <div className="flex items-center gap-2">
-          {avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={avatarUrl} alt="" className="h-7 w-7 rounded-full object-cover" />
-          ) : (
-            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-guri-green-500 text-xs font-bold text-white">
-              {(post.profile?.display_name ?? '?').slice(0, 1).toUpperCase()}
-            </div>
-          )}
+          <Link href={`/perfil/${post.profile?.username ?? ''}`}>
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={avatarUrl} alt="" className="h-7 w-7 rounded-full object-cover" />
+            ) : (
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-guri-green-500 text-xs font-bold text-white">
+                {(post.profile?.display_name ?? '?').slice(0, 1).toUpperCase()}
+              </div>
+            )}
+          </Link>
           <Link
             href={`/perfil/${post.profile?.username ?? ''}`}
             className="text-sm font-medium hover:underline"

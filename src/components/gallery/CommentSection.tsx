@@ -38,14 +38,16 @@ export function CommentSection({ postId, comments, currentUserId }: Props) {
           const avatarUrl = resolveStorageUrl(comment.profile?.avatar_url ?? null)
           return (
             <div key={comment.id} className="flex gap-2">
-              {avatarUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={avatarUrl} alt="" className="h-7 w-7 flex-shrink-0 rounded-full object-cover" />
-              ) : (
-                <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-guri-green-500 text-xs font-bold text-white">
-                  {(comment.profile?.display_name ?? '?').slice(0, 1).toUpperCase()}
-                </div>
-              )}
+              <Link href={`/perfil/${comment.profile?.username ?? ''}`} className="flex-shrink-0">
+                {avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={avatarUrl} alt="" className="h-7 w-7 rounded-full object-cover" />
+                ) : (
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-guri-green-500 text-xs font-bold text-white">
+                    {(comment.profile?.display_name ?? '?').slice(0, 1).toUpperCase()}
+                  </div>
+                )}
+              </Link>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <Link
