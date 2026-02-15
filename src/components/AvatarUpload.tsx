@@ -9,9 +9,15 @@ interface AvatarUploadProps {
   onUpload: (url: string) => void
 }
 
+function toDisplayUrl(path: string | null): string | null {
+  if (!path) return null
+  if (path.startsWith('http')) return path
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${path}`
+}
+
 export function AvatarUpload({ currentUrl, onUpload }: AvatarUploadProps) {
   const [uploading, setUploading] = useState(false)
-  const [preview, setPreview] = useState<string | null>(currentUrl)
+  const [preview, setPreview] = useState<string | null>(toDisplayUrl(currentUrl))
   const inputRef = useRef<HTMLInputElement>(null)
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -32,10 +38,9 @@ export function AvatarUpload({ currentUrl, onUpload }: AvatarUploadProps) {
 
       if (error) throw error
 
-      const { data } = supabase.storage.from('avatars').getPublicUrl(fileName)
-      onUpload(data.publicUrl)
+      onUpload(`avatars/${fileName}`)
     } catch {
-      setPreview(currentUrl)
+      setPreview(toDisplayUrl(currentUrl))
     } finally {
       setUploading(false)
     }
