@@ -4,7 +4,7 @@ import { SectionHeading } from '@/components/ui/SectionHeading'
 import { Card } from '@/components/ui/Card'
 import { AnimatedCard } from '@/components/ui/AnimatedCard'
 import { MemberCard } from '@/components/MemberCard'
-import { getMembers, getMomentos, resolveStorageUrl } from '@/lib/queries'
+import { getFeaturedProfiles, getMomentos, resolveStorageUrl } from '@/lib/queries'
 import { getIcon } from '@/lib/icons'
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export const revalidate = 300
 
 export default async function SobrePage() {
-  const [members, momentos] = await Promise.all([getMembers(), getMomentos()])
+  const [profiles, momentos] = await Promise.all([getFeaturedProfiles(), getMomentos()])
 
   return (
     <>
@@ -67,13 +67,19 @@ export default async function SobrePage() {
             title="Os Guri"
             subtitle="O time por trás de toda a resenha."
           />
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {members.map((member, i) => (
-              <AnimatedCard key={member.id} index={i}>
-                <MemberCard member={member} />
-              </AnimatedCard>
-            ))}
-          </div>
+          {profiles.length > 0 ? (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {profiles.map((profile, i) => (
+                <AnimatedCard key={profile.id} index={i}>
+                  <MemberCard profile={profile} />
+                </AnimatedCard>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-slate-500 dark:text-slate-400">
+              Nenhum guri selecionado ainda.
+            </p>
+          )}
         </Container>
       </section>
     </>

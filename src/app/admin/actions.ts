@@ -19,41 +19,31 @@ async function requireAdmin() {
   return supabase
 }
 
-// ---- MEMBERS ----
+// ---- MEMBROS (Featured Profiles) ----
 
-export async function createMember(formData: FormData) {
-  const supabase = await requireAdmin()
-  const { error } = await supabase.from('members').insert({
-    name: formData.get('name') as string,
-    role: formData.get('role') as string,
-    bio: (formData.get('bio') as string) || null,
-    instagram_url: (formData.get('instagram_url') as string) || null,
-  })
-  if (error) redirect('/admin/membros?error=create')
-  revalidatePath('/admin/membros')
-  revalidatePath('/sobre')
-  redirect('/admin/membros?success=created')
-}
-
-export async function updateMember(formData: FormData) {
+export async function toggleFeatured(formData: FormData) {
   const supabase = await requireAdmin()
   const id = formData.get('id') as string
-  const { error } = await supabase.from('members').update({
-    name: formData.get('name') as string,
-    role: formData.get('role') as string,
-    bio: (formData.get('bio') as string) || null,
-    instagram_url: (formData.get('instagram_url') as string) || null,
-  }).eq('id', id)
-  if (error) redirect('/admin/membros?error=update')
+  const featured = formData.get('featured') === 'true'
+  const { error } = await supabase
+    .from('profiles')
+    .update({ featured: !featured })
+    .eq('id', id)
+  if (error) redirect('/admin/membros?error=toggle')
   revalidatePath('/admin/membros')
   revalidatePath('/sobre')
-  redirect('/admin/membros?success=updated')
+  redirect('/admin/membros')
 }
 
-export async function deleteMember(formData: FormData) {
+export async function updateFeaturedOrder(formData: FormData) {
   const supabase = await requireAdmin()
   const id = formData.get('id') as string
-  await supabase.from('members').delete().eq('id', id)
+  const order = parseInt(formData.get('featured_order') as string, 10) || 0
+  const { error } = await supabase
+    .from('profiles')
+    .update({ featured_order: order })
+    .eq('id', id)
+  if (error) redirect('/admin/membros?error=order')
   revalidatePath('/admin/membros')
   revalidatePath('/sobre')
   redirect('/admin/membros')

@@ -1,56 +1,102 @@
-import { getMembers } from '@/lib/queries'
+import { getAllProfiles } from '@/lib/queries'
 import { Card } from '@/components/ui/Card'
-import { createMember, updateMember, deleteMember } from '../actions'
-import { Plus, Pencil, Trash2 } from 'lucide-react'
+import { toggleFeatured, updateFeaturedOrder } from '../actions'
+import { Star, ArrowUpDown } from 'lucide-react'
 
 export default async function AdminMembrosPage() {
-  const members = await getMembers()
+  const profiles = await getAllProfiles()
+  const featured = profiles.filter((p) => p.featured).sort((a, b) => a.featured_order - b.featured_order)
+  const notFeatured = profiles.filter((p) => !p.featured)
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6">
         <h2 className="text-xl font-bold">Membros</h2>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          Selecione quais guris aparecem na página &quot;Sobre Nós&quot; e defina a ordem.
+        </p>
       </div>
 
-      <Card className="mb-6">
-        <h3 className="mb-4 text-sm font-semibold text-slate-500">Adicionar Membro</h3>
-        <form action={createMember} className="grid gap-3 sm:grid-cols-2">
-          <input name="name" placeholder="Nome" required className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800" />
-          <input name="role" placeholder="Papel (ex: Fundador)" required className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800" />
-          <input name="bio" placeholder="Bio" className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800" />
-          <input name="instagram_url" placeholder="Instagram URL" className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-800" />
-          <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-lg bg-guri-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-guri-green-600 sm:col-span-2">
-            <Plus className="h-4 w-4" /> Adicionar
-          </button>
-        </form>
-      </Card>
+      {featured.length > 0 && (
+        <>
+          <h3 className="mb-3 text-sm font-semibold text-guri-green-600 dark:text-guri-green-400">
+            Aparecendo no site ({featured.length})
+          </h3>
+          <div className="mb-8 space-y-3">
+            {featured.map((profile) => (
+              <Card key={profile.id} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                  <Star className="h-5 w-5 shrink-0 fill-guri-green-500 text-guri-green-500" />
+                  <div>
+                    <p className="font-semibold">
+                      {profile.display_name ?? profile.username ?? 'Sem nome'}
+                    </p>
+                    {profile.username && (
+                      <p className="text-sm text-slate-500">@{profile.username}</p>
+                    )}
+                    {!profile.username && (
+                      <p className="text-xs text-slate-400">{profile.id.slice(0, 8)}...</p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <form action={updateFeaturedOrder} className="flex items-center gap-1">
+                    <input type="hidden" name="id" value={profile.id} />
+                    <ArrowUpDown className="h-3 w-3 text-slate-400" />
+                    <input
+                      name="featured_order"
+                      type="number"
+                      defaultValue={profile.featured_order}
+                      className="w-16 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-center text-xs dark:border-slate-700 dark:bg-slate-800"
+                    />
+                    <button type="submit" className="rounded-lg bg-guri-blue-500 px-2 py-1 text-xs text-white hover:bg-guri-blue-600">
+                      Salvar
+                    </button>
+                  </form>
+                  <form action={toggleFeatured}>
+                    <input type="hidden" name="id" value={profile.id} />
+                    <input type="hidden" name="featured" value="true" />
+                    <button type="submit" className="rounded-lg bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600">
+                      Remover
+                    </button>
+                  </form>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </>
+      )}
 
+      <h3 className="mb-3 text-sm font-semibold text-slate-500">
+        Todos os usuários ({notFeatured.length})
+      </h3>
       <div className="space-y-3">
-        {members.map((member) => (
-          <Card key={member.id} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="font-semibold">{member.name}</p>
-              <p className="text-sm text-guri-green-500">{member.role}</p>
-              {member.bio && <p className="mt-1 text-sm text-slate-500">{member.bio}</p>}
+        {notFeatured.length === 0 && (
+          <p className="text-sm text-slate-400">Todos os usuários já estão selecionados.</p>
+        )}
+        {notFeatured.map((profile) => (
+          <Card key={profile.id} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <Star className="h-5 w-5 shrink-0 text-slate-300 dark:text-slate-600" />
+              <div>
+                <p className="font-semibold">
+                  {profile.display_name ?? profile.username ?? 'Sem nome'}
+                </p>
+                {profile.username && (
+                  <p className="text-sm text-slate-500">@{profile.username}</p>
+                )}
+                {!profile.username && (
+                  <p className="text-xs text-slate-400">{profile.id.slice(0, 8)}...</p>
+                )}
+              </div>
             </div>
-            <div className="flex gap-2">
-              <form action={updateMember} className="contents">
-                <input type="hidden" name="id" value={member.id} />
-                <input name="name" defaultValue={member.name} className="w-24 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-xs dark:border-slate-700 dark:bg-slate-800" />
-                <input name="role" defaultValue={member.role} className="w-24 rounded-lg border border-slate-200 bg-slate-50 px-2 py-1 text-xs dark:border-slate-700 dark:bg-slate-800" />
-                <input type="hidden" name="bio" value={member.bio ?? ''} />
-                <input type="hidden" name="instagram_url" value={member.instagram_url ?? ''} />
-                <button type="submit" className="rounded-lg bg-guri-blue-500 p-2 text-white hover:bg-guri-blue-600">
-                  <Pencil className="h-3 w-3" />
-                </button>
-              </form>
-              <form action={deleteMember}>
-                <input type="hidden" name="id" value={member.id} />
-                <button type="submit" className="rounded-lg bg-red-500 p-2 text-white hover:bg-red-600">
-                  <Trash2 className="h-3 w-3" />
-                </button>
-              </form>
-            </div>
+            <form action={toggleFeatured}>
+              <input type="hidden" name="id" value={profile.id} />
+              <input type="hidden" name="featured" value="false" />
+              <button type="submit" className="rounded-lg bg-guri-green-500 px-3 py-1 text-xs font-medium text-white hover:bg-guri-green-600">
+                Adicionar
+              </button>
+            </form>
           </Card>
         ))}
       </div>
