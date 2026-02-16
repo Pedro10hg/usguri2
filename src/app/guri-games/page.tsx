@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Gamepad2, Sparkles } from 'lucide-react'
 import { Container } from '@/components/ui/Container'
@@ -48,12 +49,12 @@ export default function GuriGamesPage() {
           <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-guri-green-500 to-guri-blue-500 px-5 py-2 text-sm font-semibold text-white shadow-lg">
             <Sparkles className="h-4 w-4" /> Projeto Carro-Chefe
           </span>
-          <button
-            disabled
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-6 py-3 text-sm font-medium text-slate-400 dark:border-slate-700"
+          <Link
+            href="/guri-games/play"
+            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-guri-green-500 to-guri-blue-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
           >
-            <Gamepad2 className="h-4 w-4" /> Em Breve
-          </button>
+            <Gamepad2 className="h-4 w-4" /> Jogar Agora
+          </Link>
         </motion.div>
       </Container>
     </section>
