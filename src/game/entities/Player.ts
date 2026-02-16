@@ -1,9 +1,20 @@
 import Phaser from 'phaser'
-import { PLAYER_RADIUS, PLAYER_COLOR, PLAYER_SPEED } from '../config/constants'
+import {
+  PLAYER_RADIUS,
+  PLAYER_COLOR,
+  PLAYER_SPEED,
+  PLAYER_MAX_HEALTH,
+  ENEMY_DAMAGE,
+  ENEMY_DAMAGE_COOLDOWN,
+} from '../config/constants'
 
 export class Player {
   public sprite: Phaser.GameObjects.Arc
   public body: Phaser.Physics.Arcade.Body
+  public health: number = PLAYER_MAX_HEALTH
+  public maxHealth: number = PLAYER_MAX_HEALTH
+  public alive: boolean = true
+  private lastDamageTime: number = 0
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     this.sprite = scene.add.circle(x, y, PLAYER_RADIUS, PLAYER_COLOR)
@@ -15,10 +26,27 @@ export class Player {
     this.body.setDrag(600)
   }
 
+  takeDamage(time: number): boolean {
+    if (!this.alive) return false
+    if (time - this.lastDamageTime < ENEMY_DAMAGE_COOLDOWN) return false
+
+    this.lastDamageTime = time
+    this.health = Math.max(0, this.health - ENEMY_DAMAGE)
+
+    if (this.health <= 0) {
+      this.alive = false
+      this.body.setVelocity(0, 0)
+    }
+
+    return true
+  }
+
   update(
     joystickKeys: Phaser.Types.Input.Keyboard.CursorKeys,
     kbKeys?: Phaser.Types.Input.Keyboard.CursorKeys,
   ): void {
+    if (!this.alive) return
+
     let vx = 0
     let vy = 0
 
