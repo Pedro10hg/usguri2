@@ -14,13 +14,26 @@ export const JOYSTICK_FORCE_MIN = 16
 export const JOYSTICK_MARGIN = 120
 
 // Enemy
-export const ENEMY_SIZE = 28
-export const ENEMY_COLOR = 0xe63946
-export const ENEMY_SPEED = 80
-export const ENEMY_SPAWN_INTERVAL = 2000
-export const ENEMY_SPAWN_DISTANCE = 400 // distance outside camera view
+export const ENEMY_SPAWN_INTERVAL = 1200
+export const ENEMY_SPAWN_DISTANCE = 300 // distance outside camera view
 export const ENEMY_DAMAGE = 10
 export const ENEMY_DAMAGE_COOLDOWN = 500 // ms between hits
+
+// Enemy Tiers (color, hp, size, speed)
+export const ENEMY_TIERS = [
+  { color: 0xe63946, hp: 1, size: 26, speed: 85 },  // Red — weak, fast
+  { color: 0xff8c00, hp: 3, size: 30, speed: 70 },  // Orange — medium
+  { color: 0x9b59b6, hp: 6, size: 34, speed: 60 },  // Purple — tank, slow
+] as const
+
+export type EnemyTier = (typeof ENEMY_TIERS)[number]
+
+// Difficulty scaling
+export const DIFFICULTY_INTERVAL = 15_000       // every 15s difficulty increases
+export const SPAWN_INTERVAL_REDUCTION = 80      // reduce spawn interval by 80ms per tick
+export const MIN_SPAWN_INTERVAL = 300           // minimum spawn interval floor
+export const TIER2_UNLOCK_TIME = 30_000         // orange enemies after 30s
+export const TIER3_UNLOCK_TIME = 75_000         // purple enemies after 75s
 
 // Player Health
 export const PLAYER_MAX_HEALTH = 100
@@ -41,7 +54,7 @@ export const PROJECTILE_BASE_DAMAGE = 1
 export const PROJECTILE_BASE_FIRE_RATE = 1000 // ms between shots
 export const PROJECTILE_FIRE_RATE_UPGRADE = 150 // ms reduction per upgrade
 export const PROJECTILE_DAMAGE_UPGRADE = 1 // extra damage per upgrade
-export const PROJECTILE_RANGE = 600 // max travel distance before destroy
+export const PROJECTILE_RANGE = 280 // max travel distance before destroy
 
 // XP / Level
 export const XP_GEM_RADIUS = 6

@@ -12,12 +12,18 @@ import type { UpgradeChoice } from '../ui/LevelUpMenu'
 import {
   ENEMY_SPAWN_INTERVAL,
   ENEMY_SPAWN_DISTANCE,
+  ENEMY_TIERS,
   PROJECTILE_BASE_DAMAGE,
   PROJECTILE_BASE_FIRE_RATE,
   PROJECTILE_FIRE_RATE_UPGRADE,
   PROJECTILE_DAMAGE_UPGRADE,
   XP_PER_LEVEL,
   XP_COLLECT_RADIUS,
+  DIFFICULTY_INTERVAL,
+  SPAWN_INTERVAL_REDUCTION,
+  MIN_SPAWN_INTERVAL,
+  TIER2_UNLOCK_TIME,
+  TIER3_UNLOCK_TIME,
 } from '../config/constants'
 
 export class GameScene extends Phaser.Scene {
@@ -40,10 +46,15 @@ export class GameScene extends Phaser.Scene {
   // Timers
   private spawnTimer!: Phaser.Time.TimerEvent
   private shootTimer!: Phaser.Time.TimerEvent
+  private difficultyTimer!: Phaser.Time.TimerEvent
 
   // State
   private gameOver: boolean = false
   private paused: boolean = false
+
+  // Difficulty
+  private elapsedTime: number = 0
+  private currentSpawnInterval: number = ENEMY_SPAWN_INTERVAL
 
   // Stats (upgradable)
   private fireRate: number = PROJECTILE_BASE_FIRE_RATE
@@ -71,6 +82,8 @@ export class GameScene extends Phaser.Scene {
     this.level = 1
     this.xpToNextLevel = XP_PER_LEVEL
     this.kills = 0
+    this.elapsedTime = 0
+    this.currentSpawnInterval = ENEMY_SPAWN_INTERVAL
 
     // Infinite repeating ground
     this.ground = this.add.tileSprite(0, 0, width, height, 'groundTile')
@@ -129,6 +142,14 @@ export class GameScene extends Phaser.Scene {
     this.shootTimer = this.time.addEvent({
       delay: this.fireRate,
       callback: this.autoShoot,
+      callbackScope: this,
+      loop: true,
+    })
+
+    // Difficulty scaling timer
+    this.difficultyTimer = this.time.addEvent({
+      delay: DIFFICULTY_INTERVAL,
+      callback: this.increaseDifficulty,
       callbackScope: this,
       loop: true,
     })
@@ -209,15 +230,15 @@ export class GameScene extends Phaser.Scene {
   private handleProjectileHit(proj: Projectile, enemy: Enemy): void {
     if (!proj.active || !enemy.active) return
 
-    this.kills++
-
-    // Drop XP gem at enemy position
-    const gem = new XpGem(this, enemy.x, enemy.y)
-    this.xpGems.add(gem)
-
-    // Destroy both
     proj.destroy()
-    enemy.destroy()
+
+    const dead = enemy.takeDamage(this.projectileDamage)
+    if (dead) {
+      this.kills++
+      const gem = new XpGem(this, enemy.x, enemy.y)
+      this.xpGems.add(gem)
+      enemy.destroy()
+    }
   }
 
   // --- XP / Level Up ---
@@ -282,8 +303,35 @@ export class GameScene extends Phaser.Scene {
     const x = this.player.x + Math.cos(angle) * dist
     const y = this.player.y + Math.sin(angle) * dist
 
-    const enemy = new Enemy(this, x, y, this.player)
+    // Pick tier based on elapsed time
+    const availableTiers: number[] = [0]
+    if (this.elapsedTime >= TIER2_UNLOCK_TIME) availableTiers.push(1)
+    if (this.elapsedTime >= TIER3_UNLOCK_TIME) availableTiers.push(2)
+
+    const tierIndex =
+      availableTiers[Math.floor(Math.random() * availableTiers.length)]
+    const tier = ENEMY_TIERS[tierIndex]
+
+    const enemy = new Enemy(this, x, y, this.player, tier)
     this.enemies.add(enemy)
+  }
+
+  private increaseDifficulty(): void {
+    this.elapsedTime += DIFFICULTY_INTERVAL
+
+    this.currentSpawnInterval = Math.max(
+      MIN_SPAWN_INTERVAL,
+      this.currentSpawnInterval - SPAWN_INTERVAL_REDUCTION,
+    )
+
+    // Recreate spawn timer with new interval
+    this.spawnTimer.remove()
+    this.spawnTimer = this.time.addEvent({
+      delay: this.currentSpawnInterval,
+      callback: this.spawnEnemy,
+      callbackScope: this,
+      loop: true,
+    })
   }
 
   private handleEnemyHit(): void {
@@ -309,6 +357,7 @@ export class GameScene extends Phaser.Scene {
     this.gameOver = true
     this.spawnTimer.remove()
     this.shootTimer.remove()
+    this.difficultyTimer.remove()
 
     // Stop all enemies
     this.enemies.getChildren().forEach((e) => {
