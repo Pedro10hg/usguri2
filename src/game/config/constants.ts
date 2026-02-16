@@ -33,6 +33,30 @@ export const HEALTH_BAR_BG_COLOR = 0x333333
 export const HEALTH_BAR_FG_COLOR = 0x60c659
 export const HEALTH_BAR_LOW_COLOR = 0xe63946
 
+// Projectile
+export const PROJECTILE_RADIUS = 6
+export const PROJECTILE_COLOR = 0xf1fa8c
+export const PROJECTILE_SPEED = 400
+export const PROJECTILE_BASE_DAMAGE = 1
+export const PROJECTILE_BASE_FIRE_RATE = 1000 // ms between shots
+export const PROJECTILE_FIRE_RATE_UPGRADE = 150 // ms reduction per upgrade
+export const PROJECTILE_DAMAGE_UPGRADE = 1 // extra damage per upgrade
+export const PROJECTILE_RANGE = 600 // max travel distance before destroy
+
+// XP / Level
+export const XP_GEM_RADIUS = 6
+export const XP_GEM_COLOR = 0x3a75c4 // guri-blue-500
+export const XP_GEM_VALUE = 1
+export const XP_PER_LEVEL = 5 // XP needed to level up (increases each level)
+export const XP_COLLECT_RADIUS = 50 // auto-collect distance
+
+// XP Bar
+export const XP_BAR_WIDTH = 200
+export const XP_BAR_HEIGHT = 8
+export const XP_BAR_Y = 52
+export const XP_BAR_BG_COLOR = 0x333333
+export const XP_BAR_FG_COLOR = 0x3a75c4
+
 // Ground
 export const GROUND_TILE_SIZE = 64
 export const GROUND_COLOR_PRIMARY = 0x2d5a1b
