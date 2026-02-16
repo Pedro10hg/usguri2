@@ -54,6 +54,9 @@ export class GameScene extends Phaser.Scene {
   private level: number = 1
   private xpToNextLevel: number = XP_PER_LEVEL
 
+  // Score
+  private kills: number = 0
+
   constructor() {
     super({ key: 'GameScene' })
   }
@@ -67,6 +70,7 @@ export class GameScene extends Phaser.Scene {
     this.xp = 0
     this.level = 1
     this.xpToNextLevel = XP_PER_LEVEL
+    this.kills = 0
 
     // Infinite repeating ground
     this.ground = this.add.tileSprite(0, 0, width, height, 'groundTile')
@@ -205,6 +209,8 @@ export class GameScene extends Phaser.Scene {
   private handleProjectileHit(proj: Projectile, enemy: Enemy): void {
     if (!proj.active || !enemy.active) return
 
+    this.kills++
+
     // Drop XP gem at enemy position
     const gem = new XpGem(this, enemy.x, enemy.y)
     this.xpGems.add(gem)
@@ -313,46 +319,13 @@ export class GameScene extends Phaser.Scene {
 
     this.player.sprite.setFillStyle(0x666666)
 
-    const cx = this.cameras.main.centerX
-    const cy = this.cameras.main.centerY
+    // Emit to React layer for overlay UI
+    EventBus.emit('game-over', { score: this.kills, level: this.level })
+  }
 
-    const overlay = this.add.rectangle(
-      cx, cy, this.scale.width, this.scale.height, 0x000000, 0.6,
-    )
-    overlay.setScrollFactor(0)
-    overlay.setDepth(2000)
-
-    const text = this.add.text(cx, cy - 40, 'GAME OVER', {
-      fontSize: '48px',
-      fontFamily: 'monospace',
-      color: '#e63946',
-      fontStyle: 'bold',
-    })
-    text.setOrigin(0.5)
-    text.setScrollFactor(0)
-    text.setDepth(2001)
-
-    const stats = this.add.text(cx, cy + 10, `Nível ${this.level}`, {
-      fontSize: '20px',
-      fontFamily: 'monospace',
-      color: '#f1fa8c',
-    })
-    stats.setOrigin(0.5)
-    stats.setScrollFactor(0)
-    stats.setDepth(2001)
-
-    const restart = this.add.text(cx, cy + 50, 'Toque para recomeçar', {
-      fontSize: '18px',
-      fontFamily: 'monospace',
-      color: '#ffffff',
-    })
-    restart.setOrigin(0.5)
-    restart.setScrollFactor(0)
-    restart.setDepth(2001)
-
-    this.input.once('pointerdown', () => {
-      this.scene.restart()
-    })
+  /** Called from React to restart the game */
+  public restartGame(): void {
+    this.scene.restart()
   }
 
   // --- Resize ---
