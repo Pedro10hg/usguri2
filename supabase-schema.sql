@@ -388,3 +388,27 @@ create policy "Usuário faz upload na galeria" on storage.objects
 drop policy if exists "Usuário deleta foto da galeria" on storage.objects;
 create policy "Usuário deleta foto da galeria" on storage.objects
   for delete using (bucket_id = 'gallery' and auth.role() = 'authenticated');
+
+-- ============================================
+-- RANKING (Guri Games)
+-- ============================================
+
+-- 11. Ranking
+create table if not exists public.ranking (
+  id uuid default gen_random_uuid() primary key,
+  user_id uuid references public.profiles(id) on delete cascade not null,
+  name text not null,
+  score int not null default 0,
+  level int not null default 1,
+  created_at timestamptz default now()
+);
+
+alter table public.ranking enable row level security;
+
+drop policy if exists "Ranking é público" on public.ranking;
+create policy "Ranking é público" on public.ranking
+  for select using (true);
+
+drop policy if exists "Usuário insere próprio score" on public.ranking;
+create policy "Usuário insere próprio score" on public.ranking
+  for insert with check (auth.uid() = user_id);
