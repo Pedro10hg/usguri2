@@ -35,6 +35,17 @@ drop policy if exists "Usuário insere próprio perfil" on public.profiles;
 create policy "Usuário insere próprio perfil" on public.profiles
   for insert with check (auth.uid() = id);
 
+-- Campos para selecionar quem aparece na seção "Os Guri"
+alter table public.profiles add column if not exists featured boolean default false;
+alter table public.profiles add column if not exists featured_order int default 0;
+
+-- Admin pode atualizar qualquer perfil (featured, ordem, etc.)
+drop policy if exists "Admin atualiza qualquer perfil" on public.profiles;
+create policy "Admin atualiza qualquer perfil" on public.profiles
+  for update using (
+    exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+  );
+
 -- Trigger: criar perfil ao fazer signup
 create or replace function public.handle_new_user()
 returns trigger as $$

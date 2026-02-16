@@ -16,6 +16,31 @@ export async function getMembers(): Promise<Member[]> {
   } catch (e) { console.error('getMembers exception:', e); return [] }
 }
 
+export async function getFeaturedProfiles(): Promise<Profile[]> {
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('featured', true)
+      .order('featured_order')
+    if (error) { console.error('getFeaturedProfiles error:', error.message); return [] }
+    return data ?? []
+  } catch (e) { console.error('getFeaturedProfiles exception:', e); return [] }
+}
+
+export async function getAllProfiles(): Promise<Profile[]> {
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: true })
+    if (error) { console.error('getAllProfiles error:', error.message); return [] }
+    return data ?? []
+  } catch (e) { console.error('getAllProfiles exception:', e); return [] }
+}
+
 export async function getProjects(): Promise<Project[]> {
   try {
     const supabase = await createClient()

@@ -19,7 +19,7 @@ export async function login(formData: FormData) {
   }
 
   const next = (formData.get('next') as string) || '/'
-  revalidatePath('/', 'layout')
+  revalidatePath(next)
   redirect(next)
 }
 
@@ -37,13 +37,13 @@ export async function signup(formData: FormData) {
     redirect('/login?error=signup')
   }
 
-  revalidatePath('/', 'layout')
+  revalidatePath('/login')
   redirect('/login?success=check-email')
 }
 
 export async function logout() {
   const supabase = await createClient()
   await supabase.auth.signOut()
-  revalidatePath('/', 'layout')
+  revalidatePath('/')
   redirect('/')
 }

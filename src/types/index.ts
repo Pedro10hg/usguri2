@@ -69,6 +69,8 @@ export interface Profile {
   twitter_url: string | null
   website_url: string | null
   role: string
+  featured: boolean
+  featured_order: number
   created_at: string
   updated_at: string
 }
