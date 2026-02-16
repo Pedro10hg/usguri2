@@ -61,9 +61,6 @@ export function Navbar() {
                 className={`h-4 w-4 ${isGamesActive ? 'text-white' : 'text-guri-green-500'}`}
               />
               GG
-              <span className="rounded-full bg-guri-green-100 px-1.5 py-0.5 text-[10px] font-bold text-guri-green-700 dark:bg-guri-green-900 dark:text-guri-green-300">
-                EM BREVE
-              </span>
             </Link>
 
             <ThemeToggle />
@@ -119,9 +116,6 @@ export function Navbar() {
                   <Gamepad2 className="h-4 w-4 text-guri-green-500" />
                   <span className="bg-gradient-to-r from-guri-green-500 to-guri-blue-500 bg-clip-text text-transparent">
                     Guri Games
-                  </span>
-                  <span className="rounded-full bg-guri-green-100 px-1.5 py-0.5 text-[10px] font-bold text-guri-green-700 dark:bg-guri-green-900 dark:text-guri-green-300">
-                    EM BREVE
                   </span>
                 </Link>
 
